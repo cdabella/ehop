@@ -1,14 +1,14 @@
+//Package ehop contains untility functions for working with an extrahop
 package ehop
 
 import (
 	"bytes"
 	"crypto/tls"
-	"log"
 	"net/http"
 )
 
 // CreateEhopRequest creates and sends HTTP request to ExtraHop system.  Returns the response
-func CreateEhopRequest(method string, call string, payload string, APIKey string, path string) *http.Response {
+func CreateEhopRequest(method string, call string, payload string, APIKey string, path string) (*http.Response, error) {
 	//Create a 'transport' object... this is necessary if we want to ignore
 	//the EH insecure CA.  Similar to '--insecure' option for curl
 	tr := &http.Transport{
@@ -20,7 +20,7 @@ func CreateEhopRequest(method string, call string, payload string, APIKey string
 	postBody := []byte(payload)
 	req, err := http.NewRequest(method, path+call, bytes.NewBuffer(postBody))
 	if err != nil {
-		log.Fatalf("Failed to create HTTP request: %q", err.Error())
+		return nil, err
 	}
 
 	//Add some header stuff to make it EH friendly
@@ -28,8 +28,7 @@ func CreateEhopRequest(method string, call string, payload string, APIKey string
 	req.Header.Add("Content-Type", " application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatalf("Failed to perform HTTP request: %q", err.Error())
-
+		return nil, err
 	}
-	return resp
+	return resp, nil
 }
