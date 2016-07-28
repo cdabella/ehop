@@ -65,6 +65,7 @@ type ValueKeyDetail struct {
 	DeviceOID int    `json:"device_oid"`
 	Addr      string `json:"addr"`
 	Host      string `json:"host"`
+	Str       string `json:"str"`
 }
 
 type Device struct {
